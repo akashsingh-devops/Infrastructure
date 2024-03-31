@@ -1,0 +1,57 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Description: AWS CloudFormation Template for creating an ec2 
+
+Parameters:
+  Environment:
+    Type: String
+    AllowedValues:
+      - dev
+      - prod
+      - qa
+  ImageId:
+    Type: String
+
+Mappings:
+  EnvMap:
+    dev:
+      instanceType: "t2.micro"
+      name: "dev"
+    qa:
+      instanceType: "t2.micro"
+      name: "qa"
+    prod:
+      instanceType: "t2.micro"
+      name: "prod"
+
+
+Conditions:
+  CreateProdResources: !Equals [ !Sub Environment, prod ]
+
+Resources:
+  Instance:
+    Type: AWS::EC2::Instance
+    Properties:
+      InstanceType: !FindInMap [EnvMap, !Sub Environment, instanceType]
+      ImageId: !Sub ImageId
+      Tags:
+        - Key: "Name"
+          Value: !FindInMap [EnvMap, !Sub Environment, name]
+  
+  MountPoint:
+    Type: AWS::EC2::VolumeAttachment
+    Condition: CreateProdResources
+    Properties:
+      InstanceId: !Ref Instance
+      VolumeId: !Ref NewVolume
+      Device: /dev/sdh
+
+  NewVolume:
+    Type: AWS::EC2::Volume
+    Condition: CreateProdResources
+    Properties:
+      Size: 5
+      AvailabilityZone: !GetAtt Instance.AvailabilityZone
+
+Outputs:
+  InstanceName:
+    Value: !Ref Instance
