@@ -10,14 +10,9 @@ Resources:
   S3Bucket: #logicalId
     Type: AWS::S3::Bucket #type of resource
     Properties:
-      BucketName: !Ref S3bucketName
-  Instance:
-    Type: AWS::EC2::Instance
-    Properties: 
-      InstanceType: t2.micro
-      ImageId: ami-0e159fc62d940d348
-
+      BucketName: !Sub "${S3bucketName}"
 
 Outputs:
   BucketName:
     Value:  !Ref S3Bucket
+    Value:  !Sub "${S3Bucket}"
