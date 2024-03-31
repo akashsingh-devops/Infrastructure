@@ -15,4 +15,3 @@ Resources:
 Outputs:
   BucketName:
     Value:  !Ref S3Bucket
-    Value:  !Sub "${S3Bucket}"
