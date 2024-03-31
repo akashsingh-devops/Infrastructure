@@ -10,6 +10,7 @@ Parameters:
       - qa
   ImageId:
     Type: String
+    Description: AMI ID to create the EC2 Instances
 
 Mappings:
   EnvMap:
@@ -25,17 +26,17 @@ Mappings:
 
 
 Conditions:
-  CreateProdResources: !Equals [ !Sub Environment, prod ]
+  CreateProdResources: !Equals [ !Ref Environment, prod ]
 
 Resources:
   Instance:
     Type: AWS::EC2::Instance
     Properties:
-      InstanceType: !FindInMap [EnvMap, !Sub Environment, instanceType]
+      InstanceType: !FindInMap [EnvMap, !Ref Environment, instanceType]
       ImageId: !Sub ImageId
       Tags:
         - Key: "Name"
-          Value: !FindInMap [EnvMap, !Sub Environment, name]
+          Value: !FindInMap [EnvMap, !Ref Environment, name]
   
   MountPoint:
     Type: AWS::EC2::VolumeAttachment
