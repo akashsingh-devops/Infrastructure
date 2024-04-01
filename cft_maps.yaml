@@ -33,7 +33,7 @@ Resources:
     Type: AWS::EC2::Instance
     Properties:
       InstanceType: !FindInMap [EnvMap, !Ref Environment, instanceType]
-      ImageId: !Sub ImageId
+      ImageId: !Ref ImageId
       Tags:
         - Key: "Name"
           Value: !FindInMap [EnvMap, !Ref Environment, name]
