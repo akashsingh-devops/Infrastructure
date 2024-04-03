@@ -1,0 +1,49 @@
+pipeline {
+    agent any
+    environment{
+        name='akash'
+    }
+    parameters{
+        string(name: 'person', defaultValue: 'saurav', description: "this is who is")
+        booleanParam(name: 'isprod', defaultValue: true, description: "this is who is")
+        choice(name: 'city', choices: ["agra","noida","jaipur"], description: "Select your city")
+    }
+    stages {
+        stage('run-command-1') {
+            environment {
+                username='jenkins'}
+            steps {
+                sh 'echo hello world'
+                sh 'echo "${username}"'
+                sh 'echo "${person}"'
+            }
+        }
+        stage('run-command-2') {
+            steps {
+                sh '''date
+                      ls
+                      pwd
+                      cal 2024
+                    '''
+                sh 'echo ${username}'
+                sh 'echo "${person}"'
+                sh 'echo "${city}"'
+            }
+        }
+        stage('Continue ?') {
+            input{
+                message "should we continue"
+                ok "yes we should"
+            }
+            steps {
+                sh 'echo "${BUILD-ID}"'
+                sh 'echo "${person}"'
+            }
+        }
+        stage('prod') {
+            steps {
+                echo 'prod'
+            }
+        }
+    }
+}
